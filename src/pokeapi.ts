@@ -31,8 +31,11 @@ export class PokeAPI {
   }
 
   async fetchLocation(locationName: string): Promise<Location> {
+    //get the url
     let pageURL = `${PokeAPI.baseURL}/location-area/${locationName}`;
+    //check if the data is cached
     const cache = this.cache.get<Location>(pageURL);
+    //if still cached, return the cache, no need to fetch via GET request
     if(cache){
       return cache;
     }
@@ -45,6 +48,8 @@ export class PokeAPI {
         throw new Error(`Failed with error: ${response.status}`);
       }
       const res = await response.json();
+      //after getting the response, store it into the cache
+      this.cache.add<Location>(pageURL, res);
       return res;
     }catch(err){
       throw new Error(`Failed with error: ${err}`);
