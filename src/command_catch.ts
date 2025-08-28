@@ -5,5 +5,6 @@ export async function commandCatch(state:State, name:string): Promise<void>{
         console.log("Usage: catch <pokemon>");
         return;
     }
-    console.log(`${name}`);
+    console.log(`Throwing a Pokeball at ${name}...`);
+    const pokemon = await state.pokeAPI.fetchPokemon(name);
 }

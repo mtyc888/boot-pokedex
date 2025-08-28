@@ -29,7 +29,29 @@ export class PokeAPI {
       throw new Error(`failed with error: ${err}`);
     }
   }
-
+  async fetchPokemon(pokemonName: string): Promise<PokemonDetails>{
+    //get the url
+    let pageURL = `${PokeAPI.baseURL}/pokemon/${pokemonName}`;
+    //check if the data is cached
+    const cache = this.cache.get<PokemonDetails>(pageURL);
+    if(cache){
+      return cache;
+    }
+    try{
+      const response = await fetch(pageURL, {
+        method: "GET",
+        mode: "cors"
+      });
+      if(response.status != 200){
+        throw new Error(`Error fetching data: ${response.status}`);
+      }
+      const res = await response.json();
+      this.cache.add<PokemonDetails>(pageURL, res);
+      return res;
+    }catch(err){
+      throw new Error(`Error fetching:${err}`);
+    }
+  }
   async fetchLocation(locationName: string): Promise<Location> {
     //get the url
     let pageURL = `${PokeAPI.baseURL}/location-area/${locationName}`;
@@ -66,8 +88,36 @@ export type ShallowLocations = {
     url:string
   }[]
 };
-type PokemonEncounter = {
-  pokemon: { name: string; url: string };
+export type PokemonDetails = {
+  name: string,
+  base_experience: number
+} 
+export type PokemonEncounter = {
+  pokemon: { 
+    name: string; 
+    url: string 
+  },
+  version_details: [
+    {
+      version:{
+        name: string,
+        url: string
+      },
+      max_chance: number,
+      encounter_details:[
+        {
+          min_level: number,
+          max_level: number,
+          condition_values: [],
+          chance: number,
+          method: {
+            name: string,
+            url: string
+          }
+        }
+      ]
+    }
+  ]
 };
 export type Location = {
   name: string,
