@@ -1,6 +1,7 @@
 import { commandExit } from "./command_exit.js";
 import { commandHelp } from "./command_help.js";
 import { commandMapBack, commandMapForward } from "./command_map.js";
+import { commandExplore } from "./command_explore.js";
 export function cleanInput(input) {
     const arr = input.split(/\s+/);
     const arrCleaned = [];
@@ -33,21 +34,26 @@ export function getCommands() {
             description: "Get the previous page of locations",
             callback: commandMapBack,
         },
+        explore: {
+            name: "explore",
+            description: "Explore an area for pokemons",
+            callback: commandExplore,
+        }
     };
 }
 export function startREPL(state) {
     state.readline.prompt();
     state.readline.on("line", async (input) => {
         const arr = cleanInput(input);
-        if (arr.length == 0) {
+        if (arr.length === 0) {
             state.readline.prompt();
             return;
         }
         const commands = getCommands();
-        const commandName = arr[0];
+        const [commandName, ...args] = arr;
         if (commandName in commands) {
             try {
-                await state.commands[commandName].callback(state);
+                await commands[commandName].callback(state, ...args);
             }
             catch (error) {
                 console.log(`Error: ${error}`);

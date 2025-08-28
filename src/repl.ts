@@ -2,6 +2,7 @@ import { createInterface } from "readline";
 import { commandExit } from "./command_exit.js";
 import { commandHelp } from "./command_help.js";
 import { commandMapBack, commandMapForward } from "./command_map.js";
+import { commandExplore } from "./command_explore.js";
 import { State } from "./state.js";
 import { CLICommand } from "./state.js";
 export function cleanInput(input: string): string[] {
@@ -37,29 +38,36 @@ export function getCommands(): Record<string, CLICommand> {
       description: "Get the previous page of locations",
       callback: commandMapBack,
     },
+    explore: {
+      name: "explore",
+      description: "Explore an area for pokemons",
+      callback: commandExplore,
+    }
   };
 }
 
-export function startREPL(state: State){
+export function startREPL(state: State) {
+  state.readline.prompt();
+  state.readline.on("line", async (input) => {
+    const arr = cleanInput(input);
+    if (arr.length === 0) {
+      state.readline.prompt();
+      return;
+    }
+
+    const commands = getCommands();
+    const [commandName, ...args] = arr;
+
+    if (commandName in commands) {
+      try {
+        await commands[commandName].callback(state, ...args);
+      } catch (error) {
+        console.log(`Error: ${error}`);
+      }
+    } else {
+      console.log("Unknown command");
+    }
 
     state.readline.prompt();
-    state.readline.on("line", async (input)=> {
-        const arr = cleanInput(input);
-        if(arr.length == 0){
-            state.readline.prompt();
-            return;
-        }
-        const commands = getCommands();
-        const commandName = arr[0];
-        if(commandName in commands){
-          try {
-              await state.commands[commandName].callback(state);
-          } catch (error) {
-              console.log(`Error: ${error}`);
-          }
-        }else{
-            console.log("Unknown command");
-        }
-        state.readline.prompt();
-    });
+  });
 }

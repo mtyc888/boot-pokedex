@@ -66,7 +66,10 @@ export type ShallowLocations = {
     url:string
   }[]
 };
-
+type PokemonEncounter = {
+  pokemon: { name: string; url: string };
+};
 export type Location = {
-  name: string
+  name: string,
+  pokemon_encounters: PokemonEncounter[]
 };
