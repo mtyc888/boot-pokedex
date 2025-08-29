@@ -12,6 +12,7 @@ export function initState(cacheInterval) {
         commands: getCommands(),
         pokeAPI: new PokeAPI(cacheInterval),
         nextLocationsURL: "",
-        prevLocationsURL: ""
+        prevLocationsURL: "",
+        pokedex: {}
     };
 }

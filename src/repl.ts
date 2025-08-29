@@ -3,8 +3,11 @@ import { commandExit } from "./command_exit.js";
 import { commandHelp } from "./command_help.js";
 import { commandMapBack, commandMapForward } from "./command_map.js";
 import { commandExplore } from "./command_explore.js";
+import { pokedex } from "./command_pokedex.js";
 import { State } from "./state.js";
 import { CLICommand } from "./state.js";
+import { commandCatch } from "./command_catch.js";
+import { commandInspect } from "./command_inspect.js";
 export function cleanInput(input: string): string[] {
   const arr:string[] = input.split(/\s+/);
   const arrCleaned:string[] = [];
@@ -42,6 +45,21 @@ export function getCommands(): Record<string, CLICommand> {
       name: "explore",
       description: "Explore an area for pokemons",
       callback: commandExplore,
+    },
+    catch: {
+      name: "catch",
+      description: "Catch a pokemon",
+      callback: commandCatch
+    },
+    inspect: {
+      name : "inspect",
+      description: "provide info of an pokemon",
+      callback: commandInspect
+    },
+    pokedex: {
+      name: "pokedex",
+      description: "check dex",
+      callback: pokedex
     }
   };
 }
