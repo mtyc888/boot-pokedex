@@ -10,6 +10,6 @@ export async function commandExplore(state: State, ...args:string[]): Promise<vo
     console.log(`Exploring ${args[0]}...`);
     console.log("Found Pokemon:");
     for(const poke of location.pokemon_encounters){
-        console.log(` - ${poke.pokemon.name}`);
+        console.log(` - ${poke.name}`);
     }
 }

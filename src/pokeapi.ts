@@ -195,34 +195,8 @@ export type PokemonDetails = {
   }[];
   weight: number;
 };
-export type PokemonEncounter = {
-  pokemon: { 
-    name: string; 
-    url: string 
-  },
-  version_details: [
-    {
-      version:{
-        name: string,
-        url: string
-      },
-      max_chance: number,
-      encounter_details:[
-        {
-          min_level: number,
-          max_level: number,
-          condition_values: [],
-          chance: number,
-          method: {
-            name: string,
-            url: string
-          }
-        }
-      ]
-    }
-  ]
-};
+
 export type Location = {
   name: string,
-  pokemon_encounters: PokemonEncounter[]
+  pokemon_encounters: PokemonDetails[]
 };
